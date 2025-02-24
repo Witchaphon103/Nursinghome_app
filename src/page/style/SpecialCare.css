@@ -1,0 +1,91 @@
+/* SpecialCare.css */
+.schedule-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    font-family: "Tahoma", sans-serif;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  .title {
+    text-align: center;
+    font-size: 24px;
+    margin-bottom: 20px;
+    color: #333;
+  }
+  
+  .schedule-form {
+    margin-bottom: 30px;
+  }
+  
+  .section {
+    border: 1px solid #ddd;
+    padding: 15px;
+    margin-bottom: 20px;
+    border-radius: 6px;
+    background-color: #fff;
+  }
+  
+  .section legend {
+    font-weight: bold;
+    padding: 0 10px;
+    color: #555;
+  }
+  
+  .form-group {
+    margin-bottom: 15px;
+  }
+  
+  .form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: 600;
+    color: #444;
+  }
+  
+  .form-group input[type="text"],
+  .form-group input[type="datetime-local"],
+  .form-group select,
+  .form-group textarea {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+  }
+  
+  .form-group textarea {
+    resize: vertical;
+    min-height: 80px;
+  }
+  
+  .submit-btn {
+    display: block;
+    width: 100%;
+    background-color: #1976d2;
+    color: #fff;
+    border: none;
+    padding: 12px;
+    font-size: 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .submit-btn:hover {
+    background-color: #1565c0;
+  }
+  
+  /* Responsive adjustments */
+  @media (max-width: 600px) {
+    .schedule-container {
+      padding: 10px;
+    }
+    .submit-btn {
+      padding: 10px;
+      font-size: 14px;
+    }
+  }
+  
