@@ -50,20 +50,10 @@ const Dashboard = () => {
     }
   };
 
-  // ฟังก์ชันสำหรับออกจากระบบ
-  const handleLogout = async () => {
-    try {
-      await signOut(auth);
-      navigate("/");
-    } catch (error) {
-      console.error("Error logging out: ", error);
-    }
-  };
-
   return (
     <div className="main-content">
       <div className="dashboard-content">
-        <h2>📊 ข้อมูลของสาขา {selectedBranch ? `: ${selectedBranch}` : "(ยังไม่ได้เลือก)"}</h2>
+        <h2>📊 ข้อมูลของสาขา</h2>
 
         {/* รายชื่อสาขาทั้งหมด */}
         <h3>เลือกสาขาของคุณ:</h3>
@@ -73,7 +63,6 @@ const Dashboard = () => {
               <div key={branch.id} className="branch-card" onClick={() => handleSelectBranch(branch.id)}>
                 <img src={branch.image || "https://via.placeholder.com/150"} alt={branch.name} />
                 <h4>{branch.name}</h4>
-                {selectedBranch === branch.id && <span className="selected">✅</span>}
               </div>
             ))
           ) : (
