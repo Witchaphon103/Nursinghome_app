@@ -26,27 +26,34 @@ const Sidebar = ({ patientId, branchId }) => {
     return null;
   }
 
-  // ✅ เช็คว่าอยู่ในหน้าเกี่ยวกับผู้สูงอายุ `/patient-detail/:branchId/:patientId`
-  const isPatientPage = location.pathname.includes("/patient-detail/");
+  // ✅ เช็คว่าอยู่ในหน้าที่เกี่ยวข้องกับผู้ป่วยหรือไม่
+  const isPatientPage = [
+    "/patient-detail",
+    "/elderly-info",
+    "/health-records",
+    "/medicine-schedule",
+    "/special-care",
+    "/daily-activities"
+  ].some(path => location.pathname.includes(path));
 
   // 📌 เมนูหลัก กำหนด role ที่เข้าถึงได้
   const menuItems = [
     { path: "/dashboard", label: "เลือกสาขา", icon: <FaUserNurse />, roles: ["employee", "staff", "admin", "owner"] },
     { path: "/staff-info", label: "ข้อมูลเจ้าหน้าที่", icon: <FaUserNurse />, roles: ["admin", "owner"] },
-    { path: "/work-schedule", label: "ตารางเวรงาน", icon: <FaClipboardList />, roles: ["staff", "admin"] },
-    { path: "/nutrition-management", label: "การจัดการอาหารและโภชนาการ", icon: <FaUtensils />, roles: ["employee", "staff", "admin"] },
+    { path: "/work-schedule", label: "ตารางเวรงาน", icon: <FaClipboardList />, roles: ["staff", "admin", "owner"] },
+    { path: "/nutrition-management", label: "การจัดการอาหารและโภชนาการ", icon: <FaUtensils />, roles: ["employee", "staff", "admin", "owner"] },
     { path: "/finance-management", label: "การเงินและค่าใช้จ่าย", icon: <FaMoneyBillWave />, roles: ["admin", "owner"] },
     { path: "/security-management", label: "ระบบรักษาความปลอดภัย", icon: <FaShieldAlt />, roles: ["admin", "owner"] },
     { path: "/reports-and-analysis", label: "รายงานและวิเคราะห์ข้อมูล", icon: <FaChartBar />, roles: ["admin", "owner"] },
   ];
 
-  // 📌 เมนูสำหรับผู้สูงอายุ
+  // 📌 เมนูสำหรับผู้สูงอายุ (จะแสดงเฉพาะถ้าอยู่ในหน้าที่เกี่ยวข้อง)
   const patientMenu = [
-    { path: `/elderly-info/${patientId}`, label: "ข้อมูลส่วนตัวผู้สูงอายุ", icon: <FaUser />, roles: ["employee", "staff", "admin"] },
-    { path: `/health-records/${patientId}`, label: "บันทึกสุขภาพ", icon: <FaNotesMedical />, roles: ["staff", "admin"] },
-    { path: `/medicine-schedule/${patientId}`, label: "ตารางการรับประทานยา", icon: <FaPills />, roles: ["employee", "staff", "admin"] },
-    { path: `/special-care/${patientId}`, label: "การดูแลพิเศษ", icon: <FaHeartbeat />, roles: ["employee", "staff", "admin"] },
-    { path: `/daily-activities/${patientId}`, label: "กิจกรรมประจำวัน", icon: <FaWalking />, roles: ["employee", "staff", "admin"] },
+    { path: `/elderly-info/${patientId}`, label: "ข้อมูลส่วนตัว", icon: <FaUser />, roles: ["employee", "staff", "admin", "owner"] },
+    { path: `/health-records/${patientId}`, label: "บันทึกสุขภาพ", icon: <FaNotesMedical />, roles: ["staff", "admin", "owner"] },
+    { path: `/medicine-schedule/${patientId}`, label: "ตารางการรับประทานยา", icon: <FaPills />, roles: ["employee", "staff", "admin", "owner"] },
+    { path: `/special-care/${patientId}`, label: "การดูแลพิเศษ", icon: <FaHeartbeat />, roles: ["employee", "staff", "admin", "owner"] },
+    { path: `/daily-activities/${patientId}`, label: "กิจกรรมประจำวัน", icon: <FaWalking />, roles: ["employee", "staff", "admin", "owner"] },
   ];
 
   return (

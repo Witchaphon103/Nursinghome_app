@@ -10,9 +10,14 @@ const HealthRecords = () => {
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
   const [editRecord, setEditRecord] = useState(null);
-  const [currentPage, setCurrentPage] = useState(1);
-  const recordsPerPage = 3;
   const navigate = useNavigate();
+
+  // 🔹 ระบบแบ่งหน้า (Pagination)
+  const recordsPerPage = 3;
+  const [currentPage, setCurrentPage] = useState(1);
+  const indexOfLastRecord = currentPage * recordsPerPage;
+  const indexOfFirstRecord = indexOfLastRecord - recordsPerPage;
+  const currentRecords = healthRecords.slice(indexOfFirstRecord, indexOfLastRecord);
 
   useEffect(() => {
     fetchHealthRecords();
@@ -32,10 +37,6 @@ const HealthRecords = () => {
       setLoading(false);
     }
   };
-
-  const indexOfLastRecord = currentPage * recordsPerPage;
-  const indexOfFirstRecord = indexOfLastRecord - recordsPerPage;
-  const currentRecords = healthRecords.slice(indexOfFirstRecord, indexOfLastRecord);
 
   const nextPage = () => {
     if (indexOfLastRecord < healthRecords.length) {
@@ -77,6 +78,7 @@ const HealthRecords = () => {
         const docRef = await addDoc(collection(db, "healthRecords"), {
           ...newRecord,
           timestamp: serverTimestamp(),
+          patientId
         });
 
         const newRecordWithId = { id: docRef.id, ...newRecord, timestamp: new Date() };
@@ -103,73 +105,58 @@ const HealthRecords = () => {
     }
   };
 
-  const handleEdit = (record) => {
-    setNewRecord(record);
-    setEditRecord(record);
-    setShowForm(true);
-  };
-
-  const handleDelete = async (id) => {
-    try {
-      await deleteDoc(doc(db, "healthRecords", id));
-      setHealthRecords(healthRecords.filter(record => record.id !== id));
-      console.log("🗑️ ลบข้อมูลสำเร็จ: ID", id);
-    } catch (error) {
-      console.error("🔥 Error deleting health record:", error);
-    }
-  };
-
   return (
     <div className="health-records-container">
-      <div className="sidebar1">
-        <button className="add-record-btn" onClick={() => { setShowForm(true); setEditRecord(null); }}>
-          ➕ เพิ่มบันทึกสุขภาพ
-        </button>
-      </div>
+      <h1>🩺 บันทึกสุขภาพ</h1>
 
-      <div className="main-content">
-        <h1>🩺 บันทึกสุขภาพ</h1>
+      <button className="add-record-btn" onClick={() => { setShowForm(true); setEditRecord(null); }}>
+        ➕ เพิ่มบันทึกสุขภาพ
+      </button>
 
-        {loading ? (
-          <p>📌 กำลังโหลดข้อมูล...</p>
-        ) : currentRecords.length > 0 ? (
-          <div className="records-list">
-            {currentRecords.map((record) => (
-              <div className="record-card" key={record.id}>
-                <h2>📋 ข้อมูลสุขภาพ</h2>
-                <p><strong>ความดันโลหิต:</strong> {record.bloodPressure || "ไม่ระบุ"}</p>
-                <p><strong>ระดับน้ำตาล:</strong> {record.sugarLevel || "ไม่ระบุ"}</p>
-                <p><strong>อุณหภูมิ:</strong> {record.temperature || "ไม่ระบุ"} °C</p>
-                <p><strong>อัตราการเต้นของหัวใจ:</strong> {record.heartRate || "ไม่ระบุ"} bpm</p>
-                <p><strong>น้ำหนัก:</strong> {record.weight || "ไม่ระบุ"} kg</p>
-                <p><strong>ส่วนสูง:</strong> {record.height || "ไม่ระบุ"} cm</p>
-                <p><strong>BMI:</strong> {record.bmi || "ไม่ระบุ"}</p>
-                <p><strong>วันที่พบแพทย์ล่าสุด:</strong> {record.lastDoctorVisit || "ไม่ระบุ"}</p>
-                <p><strong>การวินิจฉัยจากแพทย์:</strong> {record.diagnosis || "ไม่ระบุ"}</p>
-                <button onClick={() => handleEdit(record)}>✏️ แก้ไข</button>
-                <button onClick={() => handleDelete(record.id)}>🗑️ ลบ</button>
-              </div>
-            ))}
-          </div>
-        ) : (
-          <p>❌ ไม่พบข้อมูลสุขภาพ</p>
-        )}
-
-        <div className="pagination">
-          <button onClick={prevPage} disabled={currentPage === 1}>⬅️ ก่อนหน้า</button>
-          <span>หน้า {currentPage} จาก {Math.ceil(healthRecords.length / recordsPerPage)}</span>
-          <button onClick={nextPage} disabled={indexOfLastRecord >= healthRecords.length}>ถัดไป ➡️</button>
+      {loading ? (
+        <p>📌 กำลังโหลดข้อมูล...</p>
+      ) : currentRecords.length > 0 ? (
+        <div className="records-list">
+          {currentRecords.map((record) => (
+            <div className="record-card" key={record.id}>
+              <h2>📋 ข้อมูลสุขภาพ</h2>
+              <p><strong>ความดันโลหิต:</strong> {record.bloodPressure || "ไม่ระบุ"}</p>
+              <p><strong>ระดับน้ำตาล:</strong> {record.sugarLevel || "ไม่ระบุ"}</p>
+              <p><strong>อุณหภูมิ:</strong> {record.temperature || "ไม่ระบุ"} °C</p>
+              <p><strong>อัตราการเต้นของหัวใจ:</strong> {record.heartRate || "ไม่ระบุ"} bpm</p>
+              <p><strong>น้ำหนัก:</strong> {record.weight || "ไม่ระบุ"} kg</p>
+              <p><strong>ส่วนสูง:</strong> {record.height || "ไม่ระบุ"} cm</p>
+              <p><strong>BMI:</strong> {record.bmi || "ไม่ระบุ"}</p>
+              <p><strong>วันที่พบแพทย์ล่าสุด:</strong> {record.lastDoctorVisit || "ไม่ระบุ"}</p>
+              <p><strong>การวินิจฉัยจากแพทย์:</strong> {record.diagnosis || "ไม่ระบุ"}</p>
+              <button onClick={() => handleEdit(record)}>✏️ แก้ไข</button>
+              <button onClick={() => handleDelete(record.id)}>🗑️ ลบ</button>
+            </div>
+          ))}
         </div>
+      ) : (
+        <p>❌ ไม่พบข้อมูลสุขภาพ</p>
+      )}
 
-        <button onClick={() => navigate(-1)} className="back-btn">⬅️ กลับไป</button>
+      {/* 🔹 Pagination UI */}
+      <div className="pagination">
+        <button onClick={prevPage} disabled={currentPage === 1}>⬅️ ก่อนหน้า</button>
+        <span>หน้า {currentPage} จาก {Math.ceil(healthRecords.length / recordsPerPage)}</span>
+        <button onClick={nextPage} disabled={indexOfLastRecord >= healthRecords.length}>ถัดไป ➡️</button>
       </div>
 
+      <button onClick={() => navigate(-1)} className="back-btn">⬅️ กลับไป</button>
+
+      {/* 📝 ฟอร์มเพิ่มบันทึกสุขภาพ */}
       {showForm && (
         <div className="form-popup">
           <form className="health-form" onSubmit={handleSubmit}>
             <h2>{editRecord ? "✏️ แก้ไขบันทึกสุขภาพ" : "➕ เพิ่มบันทึกสุขภาพ"}</h2>
             <input type="text" placeholder="ความดันโลหิต" value={newRecord.bloodPressure} onChange={(e) => setNewRecord({ ...newRecord, bloodPressure: e.target.value })} />
+            <input type="text" placeholder="ระดับน้ำตาล" value={newRecord.sugarLevel} onChange={(e) => setNewRecord({ ...newRecord, sugarLevel: e.target.value })} />
+            <input type="text" placeholder="อุณหภูมิ (°C)" value={newRecord.temperature} onChange={(e) => setNewRecord({ ...newRecord, temperature: e.target.value })} />
             <button type="submit">💾 {editRecord ? "อัปเดตข้อมูล" : "บันทึกข้อมูล"}</button>
+            <button type="button" onClick={() => setShowForm(false)}>❌ ยกเลิก</button>
           </form>
         </div>
       )}
